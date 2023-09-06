@@ -10,6 +10,7 @@ NPM_URL_PREFIX = "https://www.npmjs.com/package/"
 GITHUB_URL_PREFIX = "https://github.com/"
 LGPL_LICENSE_TEXT = "GNU Lesser General Public License v2.1"
 
+# Function to fetch package information from npmjs.com
 def get_npm_info(package_name):
     npm_url = NPM_URL_PREFIX + package_name
     response = requests.get(npm_url)
@@ -19,6 +20,7 @@ def get_npm_info(package_name):
     else:
         return None
 
+# Function to fetch package information from GitHub
 def get_github_info(repository_url):
     github_url = GITHUB_URL_PREFIX + repository_url
     response = requests.get(github_url)
@@ -28,6 +30,7 @@ def get_github_info(repository_url):
     else:
         return None
 
+# Function to calculate scores based on criteria
 def calculate_scores(package_name, repository_url):
     ramp_up_score = 0.0
     correctness_score = 0.0
@@ -35,9 +38,14 @@ def calculate_scores(package_name, repository_url):
     responsiveness_score = 0.0
     license_score = 0.0
 
+    # Fetch package information from npm and GitHub
     npm_info = get_npm_info(package_name)
     github_info = get_github_info(repository_url)
 
+
+    #### TO DO ####
+    # Add scoring logic here
+    # ...
 
     return {
         "URL": package_name,
@@ -50,12 +58,14 @@ def calculate_scores(package_name, repository_url):
         "License": license_score
     }
 
+# Function to run the tool
 def run_tool(url_file_path):
     with open(url_file_path, 'r') as file:
         urls = file.read().splitlines()
 
     results = []
 
+    # check urls
     for url in urls:
         parts = url.split('/')
         if len(parts) == 5 and parts[3] == "package":
@@ -71,6 +81,7 @@ def run_tool(url_file_path):
         scores = calculate_scores(package_name, repository_url)
         results.append(scores)
 
+    # Output results in NDJSON format
     with open("output.ndjson", 'w', newline='') as file:
         ndjson.dump(results, file)
 
@@ -81,17 +92,21 @@ def main():
 
     args = parser.parse_args()
 
+    # Install dependencies (placeholder)
+        #### You can customize this part to install any necessary dependencies ####
     if args.command == "install":
         subprocess.run(["pip", "install", "--user", "requests"])
 
+    # Run test suite (placeholder)
+        #### You can customize this part to run your test suite ####
     elif args.command == "test":
-        print("Running test suite... (placeholder)")
+        print("Running test suite... ")
 
-    elif args.command == "evaluate":
-        if args.url_file:
-            run_tool(args.url_file)
-        else:
-            print("Please provide a URL file using the --url-file option.")
+    # Run URL_FILE 
+    if args.url_file:
+        run_tool(args.url_file)
+    else:
+        print("Missing URL file. Usage: ./run URL_FILE")
 
 if __name__ == "__main__":
     main()
