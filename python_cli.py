@@ -12,22 +12,34 @@ LGPL_LICENSE_TEXT = "GNU Lesser General Public License v2.1"
 
 # Function to fetch package information from npmjs.com
 def get_npm_info(package_name):
+    # Construct the URL for the npm package by appending the package name to the NPM_URL_PREFIX.
     npm_url = NPM_URL_PREFIX + package_name
+    
+    # Send an HTTP GET request to the npm URL.
     response = requests.get(npm_url)
 
+    # Check if the request was successful (HTTP status code 200).
     if response.status_code == 200:
+        # Return the response text, which contains package details in HTML format.
         return response.text
     else:
-        return None
+        # If the request was not successful, return None to indicate failure.
+        return Noned
 
 # Function to fetch package information from GitHub
 def get_github_info(repository_url):
+    # Construct the URL for the GitHub repository by appending the repository URL to GITHUB_URL_PREFIX.
     github_url = GITHUB_URL_PREFIX + repository_url
+    
+    # Send an HTTP GET request to the GitHub URL.
     response = requests.get(github_url)
 
+    # Check if the request was successful (HTTP status code 200).
     if response.status_code == 200:
+        # Return the response text, which contains repository details in HTML format.
         return response.text
     else:
+    # If the request was not successful, return None to indicate failure.
         return None
 
 # Function to calculate scores based on criteria
@@ -38,7 +50,7 @@ def calculate_scores(package_name, repository_url):
     responsiveness_score = 0.0
     license_score = 0.0
 
-    # Fetch package information from npm and GitHub
+    # Fetch package information from npm and GitHub based on provided package name and repository URL.
     npm_info = get_npm_info(package_name)
     github_info = get_github_info(repository_url)
 
@@ -60,6 +72,7 @@ def calculate_scores(package_name, repository_url):
 
 # Function to run the tool
 def run_tool(url_file_path):
+    # Read the URL file and split it into a list of URLs.
     with open(url_file_path, 'r') as file:
         urls = file.read().splitlines()
 
@@ -78,6 +91,7 @@ def run_tool(url_file_path):
             print(f"Invalid URL: {url}")
             continue
 
+        # Calculate scores for the package based on its name and repository URL.
         scores = calculate_scores(package_name, repository_url)
         results.append(scores)
 
