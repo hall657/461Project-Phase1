@@ -24,7 +24,7 @@ def get_npm_info(package_name):
         return response.text
     else:
         # If the request was not successful, return None to indicate failure.
-        return Noned
+        return None
 
 # Function to fetch package information from GitHub
 def get_github_info(repository_url):
